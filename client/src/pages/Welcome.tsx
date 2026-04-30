@@ -1,14 +1,113 @@
+import { useEffect, useState } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { AssessmentShell } from "@/components/AssessmentShell";
 import { RALogo } from "@/components/RALogo";
+import { useAssessment } from "@/lib/AssessmentContext";
+
+const API_BASE = "__PORT_5000__".startsWith("__") ? "" : "__PORT_5000__";
+
+function readInviteToken(): string | null {
+  if (typeof window === "undefined") return null;
+  // The invite token is carried as a regular query string before the hash,
+  // e.g. "https://app.example.com/?invite=abc123#/". Hash routing does not
+  // capture the query, so we read it from window.location.search.
+  const search = window.location.search || "";
+  if (search) {
+    const qs = new URLSearchParams(search);
+    const t = qs.get("invite");
+    if (t) return t;
+  }
+  // Backwards-compatible fallback: "#/?invite=abc123"
+  const hash = window.location.hash || "";
+  const qIndex = hash.indexOf("?");
+  if (qIndex !== -1) {
+    const t = new URLSearchParams(hash.slice(qIndex + 1)).get("invite");
+    if (t) return t;
+  }
+  return null;
+}
 
 export default function Welcome() {
   const [, setLocation] = useLocation();
+  const { state, applyInvite } = useAssessment();
+  const [inviteError, setInviteError] = useState<string | null>(null);
+  const [inviteLoading, setInviteLoading] = useState(false);
+
+  useEffect(() => {
+    const token = readInviteToken();
+    if (!token || state.invite?.token === token) return;
+    let cancelled = false;
+    setInviteLoading(true);
+    setInviteError(null);
+    fetch(`${API_BASE}/api/invites/${encodeURIComponent(token)}`)
+      .then(async (res) => {
+        if (!res.ok) {
+          let msg = "This invite is no longer valid.";
+          try {
+            const body = await res.json();
+            if (body?.error) msg = body.error;
+          } catch {}
+          throw new Error(msg);
+        }
+        return res.json();
+      })
+      .then((data) => {
+        if (cancelled) return;
+        applyInvite({
+          token: data.token,
+          candidateName: data.candidateName,
+          candidateEmail: data.candidateEmail,
+          role: data.role,
+          client: data.client,
+          proctor: data.proctor ?? "",
+          expiresAt: data.expiresAt,
+        });
+      })
+      .catch((err) => {
+        if (!cancelled) setInviteError(err instanceof Error ? err.message : String(err));
+      })
+      .finally(() => {
+        if (!cancelled) setInviteLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const invite = state.invite;
 
   return (
     <AssessmentShell step={0}>
       <div className="max-w-3xl mx-auto">
+        {invite && (
+          <div
+            className="mb-6 ra-card-elevated rounded-lg p-4 border-accent/40"
+            data-testid="banner-invite"
+          >
+            <div className="text-[10px] font-semibold uppercase tracking-wider text-accent mb-1">
+              Invited by Resonance Asia
+            </div>
+            <div className="font-semibold text-foreground">
+              Welcome, {invite.candidateName}
+            </div>
+            <div className="text-sm text-muted-foreground mt-0.5">
+              {invite.role} · {invite.client}
+            </div>
+          </div>
+        )}
+        {inviteError && (
+          <div
+            className="mb-6 rounded-lg p-4 border border-destructive/40 bg-destructive/5 text-sm text-destructive"
+            data-testid="banner-invite-error"
+          >
+            {inviteError.replace(/\.?$/, ".")} You can still proceed and enter your details manually.
+          </div>
+        )}
+        {inviteLoading && (
+          <div className="mb-6 text-sm text-muted-foreground">Loading invite…</div>
+        )}
         <div className="mb-8">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-accent/10 border border-accent/20 text-xs font-medium text-foreground mb-4">
             <span className="h-1.5 w-1.5 rounded-full bg-accent" />
@@ -18,7 +117,7 @@ export default function Welcome() {
             Executive Case Study Assessment
           </h1>
           <p className="text-base text-muted-foreground">
-            A 90-minute scenario-based decision exercise designed by Resonance Asia to evaluate
+            A 45-minute scenario-based decision exercise designed by Resonance Asia to evaluate
             executive judgement under regulatory and capital pressure.
           </p>
         </div>
@@ -56,8 +155,10 @@ export default function Welcome() {
               You may break and resume in the same browser session.
             </li>
             <li>
-              <strong className="text-foreground">Allocate ~90 minutes.</strong> 25 mins to read
-              Section A, 35 mins for the 12 MCQs, 30 mins for the three written prompts.
+              <strong className="text-foreground">Allocate ~45 minutes for Sections B + C.</strong>{" "}
+              Read Section A at your own pace beforehand — the 45-minute clock starts only when
+              you click into Section B. Plan ~25 mins for the 12 MCQs and ~20 mins for the three
+              written prompts.
             </li>
           </ul>
         </div>

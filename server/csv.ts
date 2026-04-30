@@ -34,6 +34,13 @@ export function submissionToCsv(s: Submission): string {
   rows.push(["Timezone", s.timezone]);
   rows.push(["Proctor", s.proctor ?? ""]);
   rows.push(["Attestation", s.attestation ? "TRUE" : "FALSE"]);
+  const elapsed = s.elapsedSeconds ?? 0;
+  const mm = Math.floor(elapsed / 60);
+  const ss = elapsed % 60;
+  const elapsedDisplay = elapsed > 0 ? `${mm}m ${String(ss).padStart(2, "0")}s (${elapsed}s)` : "";
+  rows.push(["Section B Started", s.timerStartedAt ?? ""]);
+  rows.push(["Time on Sections B + C", elapsedDisplay]);
+  rows.push(["Time Budget", "45m 00s"]);
   rows.push([]);
   rows.push(["Section", "Question", "Choice", "Rationale"]);
   for (const a of sectionB) {
@@ -88,6 +95,8 @@ export function submissionToHtml(s: Submission): string {
     <tr><td style="padding:4px 8px;color:#6b7280;">Role</td><td style="padding:4px 8px;">${esc(s.role)}</td></tr>
     <tr><td style="padding:4px 8px;color:#6b7280;">Proctor</td><td style="padding:4px 8px;">${esc(s.proctor ?? "")}</td></tr>
     <tr><td style="padding:4px 8px;color:#6b7280;">Submitted</td><td style="padding:4px 8px;">${esc(s.submittedAt)}</td></tr>
+    <tr><td style="padding:4px 8px;color:#6b7280;">Section B started</td><td style="padding:4px 8px;">${esc(s.timerStartedAt ?? "")}</td></tr>
+    <tr><td style="padding:4px 8px;color:#6b7280;">Time on B + C</td><td style="padding:4px 8px;">${(() => { const e = s.elapsedSeconds ?? 0; if (!e) return "—"; const m = Math.floor(e/60); const sec = e % 60; const tag = e > 45*60 ? `<span style=\"color:#b45309;font-weight:600;\"> · over 45m budget</span>` : ""; return `${m}m ${String(sec).padStart(2,"0")}s${tag}`; })()}</td></tr>
   </table>
 
   <h2 style="font-size:14px;border-bottom:2px solid #3FB6B6;padding-bottom:6px;">Section B — 12 MCQ Rationales</h2>

@@ -24,6 +24,10 @@ export const submissions = sqliteTable("submissions", {
   emailError: text("email_error").default(""),
   // Random per-submission token used to gate the CSV download endpoint.
   downloadToken: text("download_token").default(""),
+  // Timer: when Section B was opened (ISO string) and total elapsed seconds
+  // recorded at submit time. Both optional / nullable for backwards compat.
+  timerStartedAt: text("timer_started_at").default(""),
+  elapsedSeconds: integer("elapsed_seconds").default(0),
 });
 
 export const insertSubmissionSchema = createInsertSchema(submissions).omit({
@@ -32,6 +36,8 @@ export const insertSubmissionSchema = createInsertSchema(submissions).omit({
   emailStatus: true,
   emailError: true,
   downloadToken: true,
+  timerStartedAt: true,
+  elapsedSeconds: true,
 });
 
 export type InsertSubmission = z.infer<typeof insertSubmissionSchema>;
@@ -59,6 +65,11 @@ export const submissionPayloadSchema = z.object({
     c2: z.string().min(60),
     c3: z.string().min(80),
   }),
+  // Optional timer telemetry — present once Section B has been entered.
+  timerStartedAt: z.string().nullable().optional(),
+  elapsedSeconds: z.number().int().min(0).optional(),
+  // Optional invite token — present when the candidate arrived via an /admin invite link.
+  inviteToken: z.string().optional(),
 });
 
 export type SubmissionPayload = z.infer<typeof submissionPayloadSchema>;

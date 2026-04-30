@@ -20,6 +20,12 @@ export default function CandidateDetails() {
   const { state, setCandidate } = useAssessment();
   const [form, setForm] = useState(state.candidate);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const invite = state.invite;
+  const isLocked = (key: "client" | "role" | "candidateName" | "candidateEmail" | "proctor") => {
+    if (!invite) return false;
+    if (key === "proctor") return invite.proctor.length > 0;
+    return true;
+  };
 
   const update = (k: keyof typeof form, v: string | boolean) =>
     setForm((f) => ({ ...f, [k]: v as never }));
@@ -53,40 +59,44 @@ export default function CandidateDetails() {
 
         <div className="grid gap-5">
           <div className="grid sm:grid-cols-2 gap-4">
-            <Field label="Client" id="client" error={errors.client}>
+            <Field label="Client" id="client" error={errors.client} locked={isLocked("client")}>
               <Input
                 id="client"
                 placeholder="e.g. Aurora Composite Insurance Group"
                 value={form.client}
                 onChange={(e) => update("client", e.target.value)}
+                disabled={isLocked("client")}
                 data-testid="input-client"
               />
             </Field>
-            <Field label="Role being assessed for" id="role" error={errors.role}>
+            <Field label="Role being assessed for" id="role" error={errors.role} locked={isLocked("role")}>
               <Input
                 id="role"
                 value={form.role}
                 onChange={(e) => update("role", e.target.value)}
+                disabled={isLocked("role")}
                 data-testid="input-role"
               />
             </Field>
           </div>
 
           <div className="grid sm:grid-cols-2 gap-4">
-            <Field label="Your full name" id="candidateName" error={errors.candidateName}>
+            <Field label="Your full name" id="candidateName" error={errors.candidateName} locked={isLocked("candidateName")}>
               <Input
                 id="candidateName"
                 value={form.candidateName}
                 onChange={(e) => update("candidateName", e.target.value)}
+                disabled={isLocked("candidateName")}
                 data-testid="input-candidate-name"
               />
             </Field>
-            <Field label="Your email" id="candidateEmail" error={errors.candidateEmail}>
+            <Field label="Your email" id="candidateEmail" error={errors.candidateEmail} locked={isLocked("candidateEmail")}>
               <Input
                 id="candidateEmail"
                 type="email"
                 value={form.candidateEmail}
                 onChange={(e) => update("candidateEmail", e.target.value)}
+                disabled={isLocked("candidateEmail")}
                 data-testid="input-candidate-email"
               />
             </Field>
@@ -118,11 +128,12 @@ export default function CandidateDetails() {
             </Field>
           </div>
 
-          <Field label="Resonance proctor / contact (optional)">
+          <Field label="Resonance proctor / contact (optional)" locked={isLocked("proctor")}>
             <Input
               value={form.proctor}
               onChange={(e) => update("proctor", e.target.value)}
               placeholder="Name of the Resonance partner who scheduled this"
+              disabled={isLocked("proctor")}
               data-testid="input-proctor"
             />
           </Field>
@@ -174,18 +185,27 @@ function Field({
   label,
   id,
   error,
+  locked,
   children,
 }: {
   label: string;
   id?: string;
   error?: string;
+  locked?: boolean;
   children: React.ReactNode;
 }) {
   return (
     <div className="space-y-1.5">
-      <Label htmlFor={id} className="text-sm font-medium text-foreground">
-        {label}
-      </Label>
+      <div className="flex items-center gap-2">
+        <Label htmlFor={id} className="text-sm font-medium text-foreground">
+          {label}
+        </Label>
+        {locked && (
+          <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium uppercase tracking-wider bg-accent/10 text-accent border border-accent/20">
+            Pre-filled
+          </span>
+        )}
+      </div>
       {children}
       {error && <p className="text-xs text-destructive">{error}</p>}
     </div>

@@ -1,5 +1,6 @@
 import { type ReactNode } from "react";
 import { RALogo } from "./RALogo";
+import { TimerBadge } from "./TimerBadge";
 
 interface ShellProps {
   children: ReactNode;
@@ -20,12 +21,15 @@ export function AssessmentShell({ children, step }: ShellProps) {
     <div className="min-h-screen bg-background">
       {/* Top brand bar */}
       <header className="ra-gradient-navy border-b border-[hsl(213_50%_22%)]">
-        <div className="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between">
-          <div className="text-white">
+        <div className="mx-auto max-w-5xl px-4 py-4 flex items-center justify-between gap-3">
+          <div className="text-white flex-shrink-0">
             <RALogo variant="horizontal" className="h-9 w-auto" monoColor="white" />
           </div>
-          <div className="text-[11px] uppercase tracking-[0.18em] text-white/70 hidden sm:block">
-            Executive Case Study Assessment
+          <div className="flex items-center gap-3 sm:gap-4">
+            <TimerBadge />
+            <div className="text-[11px] uppercase tracking-[0.18em] text-white/70 hidden md:block">
+              Executive Case Study Assessment
+            </div>
           </div>
         </div>
       </header>

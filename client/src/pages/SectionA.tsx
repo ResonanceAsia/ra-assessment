@@ -23,8 +23,12 @@ export default function SectionA() {
              dangerouslySetInnerHTML={{ __html: bold(caseBrief.task) }} />
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-2 mb-8">
-          <ExhibitCard exhibit={exhibits.E1} />
+        {/* E1 spans full width because it's the densest, then the three
+            secondary exhibits sit in a 3-col grid that collapses to 1-col on
+            mobile and 2-col on tablet. This stops any cell from being
+            squeezed into an unreadable column. */}
+        <ExhibitCard exhibit={exhibits.E1} />
+        <div className="grid gap-4 mt-4 sm:grid-cols-2 lg:grid-cols-3 mb-8">
           <ExhibitCard exhibit={exhibits.E2} />
           <ExhibitCard exhibit={exhibits.E3} />
           <ExhibitCard exhibit={exhibits.E4} />

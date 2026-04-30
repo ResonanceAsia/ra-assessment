@@ -11,6 +11,7 @@ import SectionA from "@/pages/SectionA";
 import SectionB from "@/pages/SectionB";
 import SectionC from "@/pages/SectionC";
 import Done from "@/pages/Done";
+import Admin from "@/pages/Admin";
 import NotFound from "@/pages/not-found";
 
 function AppRouter() {
@@ -22,6 +23,7 @@ function AppRouter() {
       <Route path="/section-b" component={SectionB} />
       <Route path="/section-c" component={SectionC} />
       <Route path="/done" component={Done} />
+      <Route path="/admin" component={Admin} />
       <Route component={NotFound} />
     </Switch>
   );

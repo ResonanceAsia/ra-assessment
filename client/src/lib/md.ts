@@ -9,7 +9,7 @@ function escapeHtml(s: string): string {
     .replace(/>/g, "&gt;");
 }
 
-function inline(s: string): string {
+export function inline(s: string): string {
   return escapeHtml(s).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
 }
 

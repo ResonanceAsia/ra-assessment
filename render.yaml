@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: ra-assessment
+    runtime: node
+    plan: starter
+    region: singapore
+    buildCommand: npm ci && npm run build
+    startCommand: node dist/index.cjs
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "5000"
+      - key: DATABASE_PATH
+        value: /data/data.db
+      - key: ADMIN_TOKEN
+        sync: false
+      - key: RESEND_API_KEY
+        sync: false
+    disk:
+      name: ra-assessment-data
+      mountPath: /data
+      sizeGB: 1

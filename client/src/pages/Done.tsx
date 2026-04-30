@@ -11,6 +11,7 @@ export default function Done() {
   const id = sessionState.lastId;
   const emailStatus = sessionState.lastEmailStatus;
   const downloadToken = sessionState.lastDownloadToken;
+  const elapsed = sessionState.lastElapsedSeconds;
 
   const downloadCsv = async () => {
     if (!id) return;
@@ -69,9 +70,19 @@ export default function Done() {
             Thank you, <strong className="text-foreground">{state.candidate.candidateName}</strong>.
             Your assessment has been logged.
           </p>
-          <p className="text-xs text-muted-foreground mb-6">
+          <p className="text-xs text-muted-foreground mb-1">
             Submission ID: <span className="font-mono text-foreground">{id}</span>
           </p>
+          {typeof elapsed === "number" && (
+            <p className="text-xs text-muted-foreground mb-6" data-testid="text-elapsed">
+              Time on Sections B + C:{" "}
+              <span className="font-medium text-foreground">
+                {Math.floor(elapsed / 60)}m {elapsed % 60}s
+              </span>{" "}
+              <span className="text-muted-foreground/70">(45-minute budget)</span>
+            </p>
+          )}
+          {typeof elapsed !== "number" && <div className="mb-6" />}
 
           <div className="rounded-md bg-muted px-4 py-3 text-left text-sm text-foreground mb-6">
             {emailStatus === "sent" ? (

@@ -8,12 +8,13 @@ import { useAssessment } from "@/lib/AssessmentContext";
 import { useMutation } from "@tanstack/react-query";
 import { apiRequest } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { inline } from "@/lib/md";
 
 const wordCount = (s: string) => s.trim().split(/\s+/).filter(Boolean).length;
 
 export default function SectionC() {
   const [, setLocation] = useLocation();
-  const { state, setSectionC } = useAssessment();
+  const { state, setSectionC, markTimerSubmitted, elapsedSeconds } = useAssessment();
   const { toast } = useToast();
   const [answers, setAnswers] = useState(state.sectionC);
   const [errors, setErrors] = useState<Record<string, string>>({});
@@ -26,15 +27,20 @@ export default function SectionC() {
         attestation: true as const,
         sectionB,
         sectionC: answers,
+        timerStartedAt: state.timerStartedAt,
+        elapsedSeconds,
+        ...(state.invite ? { inviteToken: state.invite.token } : {}),
       };
       const res = await apiRequest("POST", "/api/submissions", payload);
       return await res.json();
     },
     onSuccess: (data: { id: string; emailStatus: string; downloadToken: string }) => {
       setSectionC(answers);
+      markTimerSubmitted();
       sessionState.lastId = data.id;
       sessionState.lastEmailStatus = data.emailStatus;
       sessionState.lastDownloadToken = data.downloadToken;
+      sessionState.lastElapsedSeconds = elapsedSeconds;
       setLocation("/done");
     },
     onError: (err: Error) => {
@@ -100,9 +106,7 @@ export default function SectionC() {
                 </label>
                 <p
                   className="text-xs text-muted-foreground mb-3"
-                  dangerouslySetInnerHTML={{
-                    __html: p.description.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>"),
-                  }}
+                  dangerouslySetInnerHTML={{ __html: inline(p.description) }}
                 />
                 <Textarea
                   id={`c-${p.id}`}
@@ -174,4 +178,5 @@ export const sessionState: {
   lastId?: string;
   lastEmailStatus?: string;
   lastDownloadToken?: string;
+  lastElapsedSeconds?: number;
 } = {};

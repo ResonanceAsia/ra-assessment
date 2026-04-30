@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -11,7 +11,13 @@ const MIN_WHY = 60;
 
 export default function SectionB() {
   const [, setLocation] = useLocation();
-  const { state, setSectionBAnswer } = useAssessment();
+  const { state, setSectionBAnswer, startTimerIfNeeded } = useAssessment();
+
+  // Start the 45-minute clock the first time Section B mounts.
+  useEffect(() => {
+    startTimerIfNeeded();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
   const [idx, setIdx] = useState(() => {
     // resume on first unanswered
     const firstMissing = mcqs.findIndex((q) => !state.sectionB[q.id]);
@@ -145,7 +151,7 @@ export default function SectionB() {
             <summary className="cursor-pointer select-none px-4 py-3 text-sm font-semibold text-foreground bg-muted/50 hover-elevate">
               📊 Relevant exhibit{exhibitObjs.length > 1 ? "s" : ""}: {q.exhibits.join(", ")}
             </summary>
-            <div className="p-4 grid gap-4 sm:grid-cols-2">
+            <div className={`p-4 grid gap-4 ${exhibitObjs.length === 1 ? "" : "sm:grid-cols-2"}`}>
               {exhibitObjs.map((ex) => (
                 <ExhibitCard key={ex.id} exhibit={ex} compact />
               ))}

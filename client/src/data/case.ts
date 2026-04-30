@@ -5,53 +5,147 @@
 
 export type ExhibitId = "E1" | "E2" | "E3" | "E4" | "BRIEF";
 
+// A KeyValue is a labelled value with optional emphasis. The renderer
+// places `label` on the left in muted text and `value` on the right in
+// foreground weight, and applies tabular numbers so columns align.
+export interface KeyValueRow {
+  label: string;
+  value: string; // supports **bold**
+}
+
+export interface SegmentRow {
+  segment: string;
+  premium: string; // e.g. "USD 1.1bn GWP"
+  margin: string; // e.g. "Combined Ratio 104"
+  marginTone: "loss" | "watch" | "ok" | "strong";
+  detail: string; // e.g. "Loss ratio 78 / Expense 26"
+  note: string; // qualitative note
+}
+
+// Every exhibit has a structured body. The card renderer chooses the
+// layout per type — no markdown table soup, no truncation.
+export type ExhibitBody =
+  | { kind: "segments"; rows: SegmentRow[] }
+  | { kind: "keyValue"; rows: KeyValueRow[]; footnote?: string }
+  | { kind: "deal"; sections: { heading: string; rows: KeyValueRow[]; tone?: "neutral" | "warn" }[] }
+  | { kind: "prose"; paragraphs: string[] };
+
 export interface Exhibit {
   id: ExhibitId;
   title: string;
-  body: string; // markdown-ish, rendered as a styled card
+  subtitle?: string;
+  body: ExhibitBody;
 }
 
 export const exhibits: Record<ExhibitId, Exhibit> = {
   E1: {
     id: "E1",
-    title: "Exhibit 1 — Segment Snapshot (FY2025 actual)",
-    body: `| Segment | GWP / APE | UW / NB Margin | Key metric | Notes |
-| --- | --- | --- | --- | --- |
-| **P&C Motor (SEA)** | USD 1.1bn GWP | Combined Ratio **104** | Loss ratio 78 / Expense 26 | Claims inflation rising; data maturity uneven |
-| **P&C Commercial** | USD 0.7bn GWP | Combined Ratio **94** | Cat exposure meaningful | Reinsurance renewal in 10 weeks |
-| **Health (SEA)** | USD 0.9bn GWP | MLR **76** | Medical inflation 8–12% | Provider contracting immature |
-| **Life (HK/SG)** | USD 0.6bn APE | VNB margin **32%** | CSM growing | Heavy reliance on banca |`,
+    title: "Segment Snapshot",
+    subtitle: "FY2025 actual · by line of business",
+    body: {
+      kind: "segments",
+      rows: [
+        {
+          segment: "P&C Motor (SEA)",
+          premium: "USD 1.1bn GWP",
+          margin: "Combined Ratio 104",
+          marginTone: "loss",
+          detail: "Loss ratio 78 · Expense 26",
+          note: "Claims inflation rising; data maturity uneven",
+        },
+        {
+          segment: "P&C Commercial",
+          premium: "USD 0.7bn GWP",
+          margin: "Combined Ratio 94",
+          marginTone: "watch",
+          detail: "Cat exposure meaningful",
+          note: "Reinsurance renewal in 10 weeks",
+        },
+        {
+          segment: "Health (SEA)",
+          premium: "USD 0.9bn GWP",
+          margin: "MLR 76",
+          marginTone: "watch",
+          detail: "Medical inflation 8–12%",
+          note: "Provider contracting immature",
+        },
+        {
+          segment: "Life (HK/SG)",
+          premium: "USD 0.6bn APE",
+          margin: "VNB margin 32%",
+          marginTone: "strong",
+          detail: "CSM growing",
+          note: "Heavy reliance on banca",
+        },
+      ],
+    },
   },
   E2: {
     id: "E2",
-    title: "Exhibit 2 — Hong Kong capital position (simplified)",
-    body: `- HKRBC Solvency ratio: **115% of PCA**
-- Minimum Capital Amount (MCA): **50% of PCA**
-- IA has **informally signaled** it expects **~120%** as a comfortable operating floor
-- ORSA filing: **not yet submitted** (due in 6 weeks)`,
+    title: "Hong Kong Capital Position",
+    subtitle: "HKRBC, simplified",
+    body: {
+      kind: "keyValue",
+      rows: [
+        { label: "HKRBC Solvency ratio", value: "**115% of PCA**" },
+        { label: "Minimum Capital Amount (MCA)", value: "**50% of PCA**" },
+        { label: "IA informal expectation", value: "**~120%** as comfortable operating floor" },
+        { label: "ORSA filing", value: "**not yet submitted** · due in 6 weeks" },
+      ],
+    },
   },
   E3: {
     id: "E3",
-    title: "Exhibit 3 — P&C Motor early development (current year, 6 months)",
-    body: `- Paid loss ratio at 6 months: **67%**
-- Actuarial range of ultimate loss ratio: **78%–95%** (base **86%**)`,
+    title: "P&C Motor Early Development",
+    subtitle: "Current year · 6 months of experience",
+    body: {
+      kind: "keyValue",
+      rows: [
+        { label: "Paid loss ratio at 6 months", value: "**67%**" },
+        { label: "Actuarial range — ultimate LR", value: "**78% – 95%**" },
+        { label: "Base case ultimate LR", value: "**86%**" },
+      ],
+      footnote: "Paid loss ratio is a leading-but-immature indicator; ultimate range is the binding constraint for reserving.",
+    },
   },
   E4: {
     id: "E4",
-    title: "Exhibit 4 — Bancassurance renewal (multi-product, 10 years)",
-    body: `Partner bank proposes:
-- Upfront exclusivity fee: **USD 180m**
-- Commission share: **60% on first-year premiums**
-- Minimum annual premium by year 3: **USD 250m**
-
-Internal estimate — if you include P&C and Health products at those terms:
-- P&C bank-distributed combined ratio could reach **108**
-- Health bank-distributed MLR could rise to **82** without provider controls`,
+    title: "Bancassurance Renewal",
+    subtitle: "Multi-product · 10-year term",
+    body: {
+      kind: "deal",
+      sections: [
+        {
+          heading: "Partner bank proposes",
+          tone: "neutral",
+          rows: [
+            { label: "Upfront exclusivity fee", value: "**USD 180m**" },
+            { label: "Commission share · yr 1", value: "**60%** of first-year premiums" },
+            { label: "Minimum annual premium by year 3", value: "**USD 250m**" },
+          ],
+        },
+        {
+          heading: "Internal estimate if P&C and Health are included",
+          tone: "warn",
+          rows: [
+            { label: "P&C bank-distributed Combined Ratio", value: "could reach **108**" },
+            { label: "Health bank-distributed MLR", value: "could rise to **82** without provider controls" },
+          ],
+        },
+      ],
+    },
   },
   BRIEF: {
     id: "BRIEF",
-    title: "Case context recap",
-    body: `You are incoming **Regional CEO, APAC** for Aurora Composite Insurance Group (Life + Health + P&C) operating in Hong Kong, Singapore, Thailand, Vietnam, Indonesia. Group HQ (Europe) is pressuring for growth and dividends. APAC regulators have recently signaled heightened scrutiny on capital adequacy, conduct, and operational resilience. You have **three weeks** to present a board paper covering capital allocation, a bancassurance renewal, motor remediation, and earnings implications.`,
+    title: "Case Context Recap",
+    body: {
+      kind: "prose",
+      paragraphs: [
+        "You are incoming **Regional CEO, APAC** for Aurora Composite Insurance Group (Life + Health + P&C) operating in Hong Kong, Singapore, Thailand, Vietnam, Indonesia.",
+        "Group HQ (Europe) is pressuring for growth and dividends. APAC regulators have recently signaled heightened scrutiny on capital adequacy, conduct, and operational resilience.",
+        "You have **three weeks** to present a board paper covering capital allocation, a bancassurance renewal, motor remediation, and earnings implications.",
+      ],
+    },
   },
 };
 
