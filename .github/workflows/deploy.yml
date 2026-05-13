@@ -1,0 +1,32 @@
+name: Deploy to Lightsail
+
+on:
+  push:
+    branches: [master]
+  workflow_dispatch:  # allows manual trigger from GitHub UI
+
+concurrency:
+  group: deploy-lightsail
+  cancel-in-progress: false  # never interrupt a running deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: SSH and deploy
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.LIGHTSAIL_HOST }}
+          username: ubuntu
+          key: ${{ secrets.LIGHTSAIL_SSH_KEY }}
+          port: 22
+          command_timeout: 8m
+          script: |
+            set -e
+            cd /opt/ra-assessment
+            sudo -u raapp git pull --ff-only origin master
+            sudo -u raapp npm ci
+            sudo -u raapp npm run build
+            sudo systemctl restart ra-assessment
+            echo "Deploy complete: $(sudo -u raapp git rev-parse --short HEAD)"
