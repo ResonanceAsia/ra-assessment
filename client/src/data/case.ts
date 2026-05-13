@@ -191,7 +191,7 @@ export interface MCQ {
   stem: string;
   kind: SelectKind;
   multiMax?: number; // for kind === "multi"
-  options: { key: "A" | "B" | "C" | "D" | "E"; text: string }[];
+  options: { key: "A" | "B" | "C" | "D"; text: string }[];
   whyPrompt: string;
   whyRequirement?: string; // explicit requirement shown beneath the prompt
   exhibits: ExhibitId[]; // exhibits to display alongside this question
@@ -488,22 +488,18 @@ export const mcqs: MCQ[] = [
     options: [
       {
         key: "A",
-        text: "Soften the recommendation to maintain harmony in the room; relationships are the binding constraint in year one and there is always another quarter in which to make the technical case.",
-      },
-      {
-        key: "B",
         text: "Restate the decision declaratively, anchor on the audited reserving methodology and the 75th-percentile calibration, name the new evidence that would change your view, and assign accountable owners for next checkpoints.",
       },
       {
-        key: "C",
+        key: "B",
         text: "Escalate the disagreement to group HQ immediately to secure top cover; the principle at stake is reserve integrity and the board needs to see you will not negotiate on prudential standards.",
       },
       {
-        key: "D",
+        key: "C",
         text: "Avoid committing to a position until every director has had an opportunity to weigh in; consensus reached through patience is more durable than a decision held against pressure in the room.",
       },
       {
-        key: "E",
+        key: "D",
         text: "Hold the position in the room and propose an offline session — facilitated by you, attended by the chief actuary and the challenging director — to walk through the methodology before the next meeting.",
       },
     ],
