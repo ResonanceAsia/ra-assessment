@@ -16,7 +16,8 @@ export const submissions = sqliteTable("submissions", {
   proctor: text("proctor").default(""),
   attestation: integer("attestation", { mode: "boolean" }).notNull(),
   submittedAt: text("submitted_at").notNull(), // ISO string
-  // Section B: JSON array of 12 entries: { qId, choice (string | string[]), why }
+  // Section B: JSON array of N entries: { qId, choice (string | string[]), why }.
+  // Question count is governed by mcqs.length in client/src/data/case.ts.
   sectionB: text("section_b").notNull(),
   // Section C: JSON object { c1, c2, c3 }
   sectionC: text("section_c").notNull(),
@@ -59,11 +60,11 @@ export const submissionPayloadSchema = z.object({
       choice: z.union([z.string(), z.array(z.string())]),
       why: z.string().min(60, "Rationale must be at least 60 characters"),
     })
-  ).length(12),
+  ).length(11),
   sectionC: z.object({
-    c1: z.string().min(80),
-    c2: z.string().min(60),
-    c3: z.string().min(80),
+    c1: z.string().min(200),
+    c2: z.string().min(240),
+    c3: z.string().min(180),
   }),
   // Optional timer telemetry — present once Section B has been entered.
   timerStartedAt: z.string().nullable().optional(),
