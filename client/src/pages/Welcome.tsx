@@ -125,7 +125,7 @@ export default function Welcome() {
         <div className="grid gap-3 sm:grid-cols-3 mb-8">
           {[
             { n: "A", t: "Case + 4 Exhibits", d: "Read the brief and supporting data." },
-            { n: "B", t: "12 MCQs", d: "Each requires a short rationale." },
+            { n: "B", t: "11 MCQs", d: "Each requires a short rationale." },
             { n: "C", t: "3 Written Prompts", d: "Strategic recommendation, change-conditions, comms." },
           ].map((s) => (
             <div key={s.n} className="ra-card-elevated rounded-lg p-4">
@@ -157,7 +157,7 @@ export default function Welcome() {
             <li>
               <strong className="text-foreground">Allocate ~45 minutes for Sections B + C.</strong>{" "}
               Read Section A at your own pace beforehand — the 45-minute clock starts only when
-              you click into Section B. Plan ~25 mins for the 12 MCQs and ~20 mins for the three
+              you click into Section B. Plan ~25 mins for the 11 MCQs and ~20 mins for the three
               written prompts.
             </li>
           </ul>
@@ -183,7 +183,7 @@ export default function Welcome() {
             <RALogo variant="mark" className="h-6 w-6" />
             <span>Resonance Asia · executive search & talent advisory</span>
           </div>
-          <div>v1.0</div>
+          <div>v2.0</div>
         </div>
       </div>
     </AssessmentShell>

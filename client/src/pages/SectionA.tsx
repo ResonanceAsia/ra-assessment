@@ -68,7 +68,7 @@ export default function SectionA() {
             onClick={() => setLocation("/section-b")}
             data-testid="button-continue-to-section-b"
           >
-            Continue to Section B (12 MCQs) →
+            Continue to Section B (11 MCQs) →
           </Button>
         </div>
       </div>

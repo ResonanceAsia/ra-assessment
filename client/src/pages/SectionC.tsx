@@ -63,8 +63,8 @@ export default function SectionC() {
       }
     });
     // sanity-check Section B is fully complete
-    if (Object.keys(state.sectionB).length < 12) {
-      e._sectionB = "You have not completed all 12 MCQs.";
+    if (Object.keys(state.sectionB).length < 11) {
+      e._sectionB = "You have not completed all 11 MCQs.";
     }
     if (!state.candidate.candidateName) {
       e._cand = "Candidate details are missing — please return to the start.";
