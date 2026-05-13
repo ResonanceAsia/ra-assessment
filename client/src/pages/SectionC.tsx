@@ -108,13 +108,34 @@ export default function SectionC() {
                   className="text-xs text-muted-foreground mb-3"
                   dangerouslySetInnerHTML={{ __html: inline(p.description) }}
                 />
+                {p.subSections && p.subSections.length > 0 && (
+                  <div className="mb-3 rounded-md bg-muted/40 border border-border/60 p-3">
+                    <div className="text-[11px] font-semibold uppercase tracking-wider text-accent mb-2">
+                      Cover these in order
+                    </div>
+                    <ul className="space-y-2">
+                      {p.subSections.map((s, i) => (
+                        <li key={i} className="text-xs text-foreground/85 leading-relaxed">
+                          <span
+                            className="font-semibold text-foreground"
+                            dangerouslySetInnerHTML={{ __html: inline(s.heading) }}
+                          />
+                          <span className="text-muted-foreground"> — </span>
+                          <span
+                            dangerouslySetInnerHTML={{ __html: inline(s.guidance) }}
+                          />
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
                 <Textarea
                   id={`c-${p.id}`}
                   value={v}
                   onChange={(e) =>
                     setAnswers((a) => ({ ...a, [p.id]: e.target.value }))
                   }
-                  rows={p.id === "c1" ? 8 : 6}
+                  rows={p.id === "c2" ? 12 : p.id === "c1" ? 10 : 8}
                   className="font-sans"
                   data-testid={`textarea-${p.id}`}
                 />
