@@ -1,4 +1,4 @@
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo, useEffect, type ReactNode } from "react";
 import { useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
@@ -8,6 +8,18 @@ import { mcqs, exhibits, type MCQ } from "@/data/case";
 import { useAssessment } from "@/lib/AssessmentContext";
 
 const MIN_WHY = 60;
+
+// Tiny inline-markdown renderer: turns **word** into <strong>word</strong>.
+// Leaves all other text as plain. Safe — splits on the literal asterisk pairs.
+function renderInlineMd(text: string): ReactNode {
+  const parts = text.split(/(\*\*[^*]+\*\*)/g);
+  return parts.map((part, i) => {
+    if (part.startsWith("**") && part.endsWith("**")) {
+      return <strong key={i} className="font-semibold text-foreground">{part.slice(2, -2)}</strong>;
+    }
+    return <span key={i}>{part}</span>;
+  });
+}
 
 export default function SectionB() {
   const [, setLocation] = useLocation();
@@ -159,15 +171,17 @@ export default function SectionB() {
           </details>
         )}
 
-        {/* Stem */}
-        <h1 className="text-lg font-semibold text-foreground leading-snug mb-1">
-          {q.stem}
-        </h1>
-        {q.kind === "multi" && (
-          <p className="text-xs text-accent font-medium mb-4">
-            Multi-select: pick up to {q.multiMax ?? 2} options.
-          </p>
-        )}
+        {/* Question block — stem in its own card, normal weight, only **bold** spans rendered bold */}
+        <div className="ra-card-elevated rounded-lg p-4 sm:p-5 mb-5">
+          <h1 className="text-lg font-normal text-foreground/90 leading-relaxed">
+            {renderInlineMd(q.stem)}
+          </h1>
+          {q.kind === "multi" && (
+            <p className="text-xs text-accent font-medium mt-3">
+              Multi-select: pick up to {q.multiMax ?? 2} options.
+            </p>
+          )}
+        </div>
 
         {/* Options */}
         <div className="space-y-2 mb-6">
@@ -205,7 +219,7 @@ export default function SectionB() {
                     {opt.key}
                   </div>
                   <div className="text-sm text-foreground/90 leading-relaxed pt-0.5">
-                    {opt.text}
+                    {renderInlineMd(opt.text)}
                   </div>
                 </div>
               </button>
@@ -221,7 +235,7 @@ export default function SectionB() {
           >
             Your rationale <span className="text-destructive">*</span>
           </label>
-          <p className="text-xs text-muted-foreground mb-2">{q.whyPrompt}</p>
+          <p className="text-xs text-muted-foreground mb-2">{renderInlineMd(q.whyPrompt)}</p>
           <p className="text-xs text-foreground/70 mb-3">
             <strong className="text-accent">Required:</strong> include (1) a specific metric from
             the exhibits, (2) an explicit assumption or uncertainty, and (3) a change-condition.
