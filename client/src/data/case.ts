@@ -208,19 +208,19 @@ export const mcqs: MCQ[] = [
     options: [
       {
         key: "A",
-        text: "3-yr HKRBC projection under base / adverse / severe scenarios; IA relationship team's view; current and projected Indonesia profitability range; chief actuary's view on HK loss-ratio trajectory",
+        text: "Three-year HKRBC projection under base / adverse / severe scenarios, IA relationship team's read on appetite, current and projected Indonesia profitability range, and the chief actuary's view on HK loss-ratio trajectory.",
       },
       {
         key: "B",
-        text: "Year-end HKRBC ratio and HQ's preferred transfer amount; defer regulator engagement until the transfer is approved",
+        text: "Year-end HKRBC ratio plus HQ's preferred transfer amount; defer formal IA engagement until the transfer is approved at group level to avoid signalling indecision to the regulator.",
       },
       {
         key: "C",
-        text: "Reinsurance market quotes to fund the transfer through capital relief; assume IA will accept anything above MCA",
+        text: "Reinsurance market quotes to fund the transfer via capital relief; assume the IA will accept any solvency position above MCA given our long-standing relationship with the supervisory team.",
       },
       {
         key: "D",
-        text: "Legal opinion on whether the transfer is permitted at MCA; proceed if permitted",
+        text: "Group legal opinion on whether the transfer is permitted while HK sits above MCA; proceed if permitted, because regulatory headroom and shareholder-return obligations both favour the deployment.",
       },
     ],
     whyPrompt:
@@ -240,19 +240,19 @@ export const mcqs: MCQ[] = [
     options: [
       {
         key: "A",
-        text: "Hold the reserve at 75th percentile of the actuarial range; present PBT and capital under base (86%) and adverse (95%) ultimates; pause the 25% growth ask until next quarterly review",
+        text: "Hold reserve at the 75th percentile of the actuarial range; present PBT and capital under base (86%) and adverse (95%) ultimates; pause the +25% growth ask pending next quarterly review.",
       },
       {
         key: "B",
-        text: "Allow +10% growth only in lowest-loss sub-segments; tie any further growth to a 90-day reserve-adequacy gate informed by underwriter-vs-ultimate history",
+        text: "Allow +10% growth only in lowest-loss sub-segments; tie any further growth to a 90-day reserve-adequacy gate informed by the three-year underwriter-versus-ultimate history in Exhibit 3.",
       },
       {
         key: "C",
-        text: "Move the reserve to the 50th percentile to reflect the favourable paid experience; redirect the released capital to Indonesia",
+        text: "Move the reserve to the 50th percentile to reflect favourable paid experience; redirect released capital toward Indonesia growth and disclose the methodology change transparently to the board.",
       },
       {
         key: "D",
-        text: "Approve +25% growth now; revisit reserve at year-end",
+        text: "Approve +25% growth now to reflect the strong paid-LR trend; revisit the reserve at year-end once one more quarter of development confirms the favourable pattern is sustainable.",
       },
     ],
     whyPrompt:
@@ -269,10 +269,22 @@ export const mcqs: MCQ[] = [
     stem: "Restricting your attention to the **P&C Motor (SEA)** row in Exhibit 1, a combined ratio of 104 most directly implies:",
     kind: "single",
     options: [
-      { key: "A", text: "Underwriting profit before investment income" },
-      { key: "B", text: "Underwriting loss before investment income" },
-      { key: "C", text: "Investment income is insufficient to cover claims" },
-      { key: "D", text: "Reserve strengthening is required this quarter" },
+      {
+        key: "A",
+        text: "Underwriting profit before investment income, since a combined ratio above 100 still permits positive overall margin when the expense ratio is well controlled relative to peers.",
+      },
+      {
+        key: "B",
+        text: "Underwriting loss before investment income, with the four-point deficit needing to be absorbed by investment yield or corrected through pricing, mix, or claims action.",
+      },
+      {
+        key: "C",
+        text: "Investment income is insufficient to cover claims this period; the segment is structurally loss-making once policyholder returns and capital charges are factored in.",
+      },
+      {
+        key: "D",
+        text: "Reserve strengthening is required this quarter, because a CR above 100 by definition signals that prior estimates were inadequate and a true-up is overdue.",
+      },
     ],
     whyPrompt:
       "Name **two drivers** you would test first to diagnose whether the 104 is fixable inside 6–12 months, and the one driver you would deprioritise.",
@@ -290,19 +302,19 @@ export const mcqs: MCQ[] = [
     options: [
       {
         key: "A",
-        text: "Decide on total group premium uplift across all lines",
+        text: "Decide on total group premium uplift across life savings and retail P&C combined, since the bank's value proposition is the integrated distribution footprint and segment-level breakdown would understate it.",
       },
       {
         key: "B",
-        text: "Segment economics separately for life savings and retail P&C; define a walk-away threshold on each; explore performance-linked fee tranches and scope limits; run independent related-party governance because the bank is a 30% shareholder in Indonesia",
+        text: "Segment economics separately for life savings and retail P&C, define a walk-away on each, explore performance-linked fee tranches and scope limits, and run independent related-party governance given the bank's 30% stake.",
       },
       {
         key: "C",
-        text: "Accept; competitors are signing similar 10-year deals and the upfront fee is in market",
+        text: "Accept the proposal; competitors are signing similar 10-year exclusives, the USD 180m upfront is in-market, and walking away forfeits the most attractive distribution channel in the territory.",
       },
       {
         key: "D",
-        text: "Reject; exclusivity fees of this scale are always value-destructive",
+        text: "Reject outright; exclusivity fees of this scale combined with related-party complexity are value-destructive over any plausible lapse and claims scenario and damage future negotiating leverage.",
       },
     ],
     whyPrompt:
@@ -321,19 +333,19 @@ export const mcqs: MCQ[] = [
     options: [
       {
         key: "A",
-        text: "The 3 independent directors + IA relationship team + chief actuary",
+        text: "The three independent directors, the IA relationship team, and the chief actuary — to surface governance risk, regulatory appetite, and reserve credibility before the board paper crystallises.",
       },
       {
         key: "B",
-        text: "Group CFO + the 4 group-nominated directors + bank counterparty",
+        text: "Group CFO, the four group-nominated directors, and the bank counterparty — to align HQ on the capital ask and signal commercial seriousness on the banca renewal before the clock runs.",
       },
       {
         key: "C",
-        text: "Customers + sales heads + brokers (revenue first)",
+        text: "Customers, sales heads, and brokers first — the franchise health is the leading indicator of every other number in the pack and an outside-in view will reframe the board narrative.",
       },
       {
         key: "D",
-        text: "The CRO + head of compliance + internal audit (risk first)",
+        text: "The CRO, head of compliance, and internal audit — risk surface area is the binding constraint and starting elsewhere risks tabling a paper that the second line will publicly contradict.",
       },
     ],
     whyPrompt:
@@ -352,19 +364,19 @@ export const mcqs: MCQ[] = [
     options: [
       {
         key: "A",
-        text: "(i) — pre-clear with chief actuary and pricing committee",
+        text: "(i) the 90-day motor pricing change — pre-clear with the chief actuary and pricing committee; pricing reversals carry policyholder-conduct exposure and erode broker trust if implemented twice in succession.",
       },
       {
         key: "B",
-        text: "(ii) — pre-clear with board risk committee, IA relationship team, related-party committee (bank owns 30% of Indonesia sub), and group legal — before any signal of intent to the bank",
+        text: "(ii) the 10-year banca exclusive with USD 180m upfront — pre-clear with the board risk committee, IA relationship team, related-party committee, and group legal before any signal of intent to the bank.",
       },
       {
         key: "C",
-        text: "(iii) — pre-clear with COO and head of claims",
+        text: "(iii) the three-month claims-triage pilot — pre-clear with the COO and head of claims; service-level disruption to in-force policyholders is hard to recover from and the operational risk is underestimated.",
       },
       {
         key: "D",
-        text: "(iv) — pre-clear with group CFO only; IA can be informed after transfer",
+        text: "(iv) the HQ capital transfer — pre-clear with the group CFO only; the IA can be informed after the transfer because regulatory engagement is consultative rather than approval-gated at this scale.",
       },
     ],
     whyPrompt:
@@ -381,13 +393,22 @@ export const mcqs: MCQ[] = [
     stem: "Your motor underwriting head argues: 'Paid LR is 67%, we are clearly profitable, approve growth.' Best response:",
     kind: "single",
     options: [
-      { key: "A", text: "Approve; underwriting has local knowledge" },
+      {
+        key: "A",
+        text: "Approve; the underwriting head has the deepest local knowledge of the portfolio and overriding the front-line view damages their authority and willingness to surface bad news in future.",
+      },
       {
         key: "B",
-        text: "Pull the **3-year history of this underwriter's own estimates vs ultimate** (Exhibit 3 shows −4 to −9 pts of optimism), ask for the ultimate-LR range and scenario-weighted expected value, articulate the downside in PBT and capital terms, and set a growth gate tied to reserve update",
+        text: "Pull the three-year history of this underwriter's own estimates vs ultimate (Exhibit 3: −4 to −9 pts of optimism), ask for the ultimate-LR range and scenario-weighted expected value, set a growth gate tied to reserve update.",
       },
-      { key: "C", text: "Defer to the actuary; no CEO view needed" },
-      { key: "D", text: "Reject growth permanently; motor is structurally bad" },
+      {
+        key: "C",
+        text: "Defer to the chief actuary's reserve view and avoid forming an independent CEO position on a technical underwriting question; the role is to govern the methodology, not second-guess the trade.",
+      },
+      {
+        key: "D",
+        text: "Reject growth permanently; motor is structurally loss-making in this geography and any approval — even gated — sets a precedent the underwriter will exploit at the next quarterly review.",
+      },
     ],
     whyPrompt:
       "Name the **bias** in the underwriter's argument, your **countermeasure**, and the **change-condition** that would legitimately move you toward approving growth.",
@@ -405,19 +426,19 @@ export const mcqs: MCQ[] = [
     options: [
       {
         key: "A",
-        text: "Fund all three simultaneously to show momentum",
+        text: "Fund all three initiatives simultaneously to demonstrate decisiveness in week one; sequenced execution risks losing momentum with the board and signals capital weakness to the bank counterparty.",
       },
       {
         key: "B",
-        text: "Prioritise the initiative with the highest short-term premium growth",
+        text: "Prioritise the initiative with the highest short-term premium growth (banca renewal); growth momentum unlocks investor confidence and the regulator typically follows commercial logic when capital is well-deployed.",
       },
       {
         key: "C",
-        text: "Engage the IA in week 1 on solvency expectations; in parallel, scope the banca walk-away within the bank's 6-week clock; sequence motor remediation behind the regulator answer because it determines capital headroom for growth; defer health cost controls to a Q+1 workstream",
+        text: "Engage the IA in week 1 on solvency; in parallel scope the banca walk-away within the bank's 6-week clock; sequence motor remediation behind the regulator answer; defer health cost controls to Q+1.",
       },
       {
         key: "D",
-        text: "Freeze investment until volatility subsides",
+        text: "Freeze new investment until reserve volatility subsides and IA expectations are formally clarified in writing; capital discipline is the CEO signal the board most needs to see in the first quarter.",
       },
     ],
     whyPrompt:
@@ -436,19 +457,19 @@ export const mcqs: MCQ[] = [
     options: [
       {
         key: "A",
-        text: "The 4 group-nominated directors; risk is HQ surprise",
+        text: "The four group-nominated directors first; the principal risk is HQ surprise on the capital transfer, and alignment upstream is the highest-leverage use of the limited 1:1 time available.",
       },
       {
         key: "B",
-        text: "The independent director chairing the risk committee + the IA-appointed observer most active on capital + the group-nominated director closest to the bank counterparty; risk of silent dissent leading to later reversal or passive resistance in execution",
+        text: "The independent director chairing the risk committee, the IA-appointed observer most active on capital, and the group-nominated director closest to the bank counterparty; risk is silent dissent leading to later reversal.",
       },
       {
         key: "C",
-        text: "Whichever directors respond fastest to email; risk is none",
+        text: "Whichever directors respond fastest to email outreach; momentum and reciprocity matter more than formal seniority in the first three weeks, and the board pack will surface any substantive concerns.",
       },
       {
         key: "D",
-        text: "None; treat the board as a single audience to manage on the day",
+        text: "None; treat the board as a single audience to manage on the day with a well-constructed paper, since pre-meetings risk creating factions and being read as lobbying.",
       },
     ],
     whyPrompt:
@@ -465,16 +486,25 @@ export const mcqs: MCQ[] = [
     stem: "A board member challenges your reserve caution: 'You're killing growth.' Best approach:",
     kind: "single",
     options: [
-      { key: "A", text: "Soften the recommendation to maintain harmony" },
+      {
+        key: "A",
+        text: "Soften the recommendation to maintain harmony in the room; relationships are the binding constraint in year one and there is always another quarter in which to make the technical case.",
+      },
       {
         key: "B",
-        text: "Restate the decision declaratively, anchor on the audited reserving methodology and the 75th-percentile calibration, name the new evidence that would change your view, and assign accountable owners for next checkpoints",
+        text: "Restate the decision declaratively, anchor on the audited reserving methodology and the 75th-percentile calibration, name the new evidence that would change your view, and assign accountable owners for next checkpoints.",
       },
-      { key: "C", text: "Escalate disagreement to HQ immediately" },
-      { key: "D", text: "Avoid committing until everyone agrees" },
+      {
+        key: "C",
+        text: "Escalate the disagreement to group HQ immediately to secure top cover; the principle at stake is reserve integrity and the board needs to see you will not negotiate on prudential standards.",
+      },
+      {
+        key: "D",
+        text: "Avoid committing to a position until every director has had an opportunity to weigh in; consensus reached through patience is more durable than a decision held against pressure in the room.",
+      },
       {
         key: "E",
-        text: "Hold the position in the room and propose an offline session — facilitated by you, attended by the chief actuary and the challenging director — to walk through the methodology before the next meeting",
+        text: "Hold the position in the room and propose an offline session — facilitated by you, attended by the chief actuary and the challenging director — to walk through the methodology before the next meeting.",
       },
     ],
     whyPrompt:
@@ -491,13 +521,22 @@ export const mcqs: MCQ[] = [
     stem: "You discover last year's motor remediation failed: the loss ratio is back where it started despite a detailed remediation plan. Best CEO response:",
     kind: "single",
     options: [
-      { key: "A", text: "Treat as bad luck; move on" },
+      {
+        key: "A",
+        text: "Treat the result as bad luck within the normal range of motor experience and move on; over-reacting to a single year of adverse development risks destabilising the underwriting team further.",
+      },
       {
         key: "B",
-        text: "Require the chief actuary to run a structured assumption-failure review (which assumption broke, what leading indicator was missed, what changes in development factor selection or pricing model are required) — and hold the CEO-owned questions to: governance gaps, sponsorship gaps, and whether the team has the capability to execute the next attempt",
+        text: "Require the chief actuary to run a structured assumption-failure review (which assumption broke, what leading indicator was missed, what changes in development-factor selection are needed) — and hold CEO-owned questions to governance, sponsorship, and capability.",
       },
-      { key: "C", text: "Replace the underwriting team" },
-      { key: "D", text: "Stop writing remediation plans" },
+      {
+        key: "C",
+        text: "Replace the underwriting team; sustained failure against a detailed remediation plan signals an execution-capability gap that coaching will not close and the board expects decisive action.",
+      },
+      {
+        key: "D",
+        text: "Stop writing detailed remediation plans for motor and instead apply a portfolio cap until two consecutive years of LR improvement are observed; pricing intervention is too slow in this segment.",
+      },
     ],
     whyPrompt:
       "Name **one leading indicator** you would have tracked monthly to catch the failure earlier, and the **decision threshold** that would have triggered escalation to you.",
