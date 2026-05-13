@@ -67,7 +67,7 @@ export default function Done() {
             Submission received
           </h1>
           <p className="text-sm text-muted-foreground mb-1">
-            Thank you, <strong className="text-foreground">{state.candidate.candidateName}</strong>.
+            Thank you, <strong className="text-foreground">{[state.candidate.candidateName, state.candidate.candidateSurname].filter(Boolean).join(" ")}</strong>.
             Your assessment has been logged.
           </p>
           <p className="text-xs text-muted-foreground mb-1">

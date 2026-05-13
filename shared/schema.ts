@@ -7,14 +7,15 @@ import { z } from "zod";
 // type — they are parsed in application code.
 export const submissions = sqliteTable("submissions", {
   id: text("id").primaryKey(), // ULID-style id like "RA-2026-0001"
-  client: text("client").notNull(),
-  role: text("role").notNull(),
+  client: text("client").default(""),
+  role: text("role").default(""),
   candidateName: text("candidate_name").notNull(),
+  candidateSurname: text("candidate_surname").default(""),
   candidateEmail: text("candidate_email").notNull(),
-  candidateMobile: text("candidate_mobile").notNull(),
-  timezone: text("timezone").notNull(),
+  candidateMobile: text("candidate_mobile").default(""),
+  timezone: text("timezone").default(""),
   proctor: text("proctor").default(""),
-  attestation: integer("attestation", { mode: "boolean" }).notNull(),
+  attestation: integer("attestation", { mode: "boolean" }).default(true),
   submittedAt: text("submitted_at").notNull(), // ISO string
   // Section B: JSON array of N entries: { qId, choice (string | string[]), why }.
   // Question count is governed by mcqs.length in client/src/data/case.ts.
@@ -44,16 +45,19 @@ export const insertSubmissionSchema = createInsertSchema(submissions).omit({
 export type InsertSubmission = z.infer<typeof insertSubmissionSchema>;
 export type Submission = typeof submissions.$inferSelect;
 
-// Client-facing payload that the form posts to /api/submissions
+// Client-facing payload that the form posts to /api/submissions.
+// Only candidateName, candidateSurname, candidateEmail are required from the
+// candidate. Client/role/proctor are filled by the admin invite flow.
 export const submissionPayloadSchema = z.object({
-  client: z.string().min(1),
-  role: z.string().min(1),
-  candidateName: z.string().min(2),
+  client: z.string().optional().default(""),
+  role: z.string().optional().default(""),
+  candidateName: z.string().min(1),
+  candidateSurname: z.string().min(1),
   candidateEmail: z.string().email(),
-  candidateMobile: z.string().min(5),
-  timezone: z.string().min(1),
+  candidateMobile: z.string().optional().default(""),
+  timezone: z.string().optional().default(""),
   proctor: z.string().optional().default(""),
-  attestation: z.literal(true),
+  attestation: z.boolean().optional().default(true),
   sectionB: z.array(
     z.object({
       qId: z.string(),

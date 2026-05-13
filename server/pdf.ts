@@ -22,7 +22,7 @@ export async function submissionToPdf(s: Submission): Promise<Buffer> {
       size: "LETTER",
       margins: { top: PAGE_MARGIN, bottom: PAGE_MARGIN, left: PAGE_MARGIN, right: PAGE_MARGIN },
       info: {
-        Title: `Submission ${s.id} — ${s.candidateName}`,
+        Title: `Submission ${s.id} — ${s.candidateName}${s.candidateSurname ? " " + s.candidateSurname : ""}`,
         Author: "Resonance Asia",
         Subject: "Executive Case Study Assessment Submission",
       },
@@ -66,12 +66,10 @@ export async function submissionToPdf(s: Submission): Promise<Buffer> {
       : "—";
 
     keyValueGrid(doc, [
-      ["Name", s.candidateName],
+      ["Name", `${s.candidateName}${s.candidateSurname ? " " + s.candidateSurname : ""}`],
       ["Email", s.candidateEmail],
-      ["Mobile", s.candidateMobile],
-      ["Timezone", s.timezone],
-      ["Client", s.client],
-      ["Role", s.role],
+      ["Client", s.client || "—"],
+      ["Role", s.role || "—"],
       ["Proctor", s.proctor || "—"],
       ["Submitted", s.submittedAt],
       ["Section B started", s.timerStartedAt || "—"],
@@ -80,12 +78,11 @@ export async function submissionToPdf(s: Submission): Promise<Buffer> {
         elapsedDisplay + (overBudget ? "  · OVER 45m BUDGET" : ""),
         overBudget ? WARN : INK,
       ],
-      ["Attestation", s.attestation ? "Confirmed" : "Not confirmed"],
     ]);
 
     // ---- Section B ----
     doc.moveDown(1.2);
-    sectionTitle(doc, "Section B — 12 MCQ rationales");
+    sectionTitle(doc, "Section B — MCQ rationales");
 
     sectionB.forEach((a, i) => {
       const choice = Array.isArray(a.choice) ? a.choice.join(" + ") : a.choice;

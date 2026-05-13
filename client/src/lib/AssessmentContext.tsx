@@ -6,6 +6,7 @@ export interface CandidateDetails {
   client: string;
   role: string;
   candidateName: string;
+  candidateSurname: string;
   candidateEmail: string;
   candidateMobile: string;
   timezone: string;
@@ -50,13 +51,16 @@ export interface AssessmentState {
 const blank: AssessmentState = {
   candidate: {
     client: "",
-    role: "Regional CEO (APAC) — Composite Insurer",
+    role: "",
     candidateName: "",
+    candidateSurname: "",
     candidateEmail: "",
     candidateMobile: "",
-    timezone: "Asia/Hong_Kong",
+    timezone: "",
     proctor: "",
-    attestation: false,
+    // No-AI confirmation is recorded server-side; the candidate-facing form
+    // no longer asks for an explicit tick-box.
+    attestation: true,
   },
   sectionB: {},
   sectionC: { c1: "", c2: "", c3: "" },
@@ -106,19 +110,29 @@ export function AssessmentProvider({ children }: { children: ReactNode }) {
   const setCandidate = (candidate: CandidateDetails) =>
     setState((s) => ({ ...s, candidate }));
 
-  const applyInvite = (invite: InviteMeta) =>
+  const applyInvite = (invite: InviteMeta) => {
+    // The invite carries one "candidateName" string from the admin form.
+    // Split it into first / surname on the last space so the candidate form
+    // can pre-fill both fields. If there is no space, treat the whole value
+    // as the first name and leave surname empty for the candidate to fill.
+    const full = (invite.candidateName ?? "").trim();
+    const lastSpace = full.lastIndexOf(" ");
+    const first = lastSpace > 0 ? full.slice(0, lastSpace).trim() : full;
+    const surname = lastSpace > 0 ? full.slice(lastSpace + 1).trim() : "";
     setState((s) => ({
       ...s,
       invite,
       candidate: {
         ...s.candidate,
-        candidateName: invite.candidateName,
+        candidateName: first,
+        candidateSurname: surname,
         candidateEmail: invite.candidateEmail,
         role: invite.role,
         client: invite.client,
         proctor: invite.proctor || s.candidate.proctor,
       },
     }));
+  };
 
   const setSectionBAnswer = (a: SectionBAnswer) =>
     setState((s) => ({ ...s, sectionB: { ...s.sectionB, [a.qId]: a } }));

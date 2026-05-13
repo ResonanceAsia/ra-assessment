@@ -30,11 +30,13 @@ export async function sendSubmissionEmail(s: Submission): Promise<void> {
     throw new Error("Resend not configured (set RESEND_API_KEY env var)");
   }
 
+  const fullName = `${s.candidateName}${s.candidateSurname ? " " + s.candidateSurname : ""}`.trim();
   const pdf = await submissionToPdf(s);
   const pdfB64 = pdf.toString("base64");
-  const filename = `RA-Assessment_${s.candidateName.replace(/[^A-Za-z0-9]+/g, "-")}_${s.id}.pdf`;
+  const filename = `RA-Assessment_${fullName.replace(/[^A-Za-z0-9]+/g, "-") || s.candidateName.replace(/[^A-Za-z0-9]+/g, "-")}_${s.id}.pdf`;
 
-  const subject = `New submission · ${s.candidateName} · ${s.role} · ${s.client}`;
+  const subjectTail = [s.role, s.client].filter(Boolean).join(" · ");
+  const subject = `New submission · ${fullName}${subjectTail ? " · " + subjectTail : ""}`;
   const elapsed = s.elapsedSeconds ?? 0;
   const mm = Math.floor(elapsed / 60);
   const ss = elapsed % 60;
@@ -48,9 +50,9 @@ export async function sendSubmissionEmail(s: Submission): Promise<void> {
     <div style="font-size:16px;font-weight:600;margin-top:4px;">New candidate submission</div>
   </div>
   <table style="width:100%;border-collapse:collapse;font-size:13px;margin-top:16px;">
-    <tr><td style="padding:5px 0;color:#6b7280;width:130px;">Candidate</td><td style="padding:5px 0;font-weight:600;">${escape(s.candidateName)}</td></tr>
+    <tr><td style="padding:5px 0;color:#6b7280;width:130px;">Candidate</td><td style="padding:5px 0;font-weight:600;">${escape(fullName)}</td></tr>
     <tr><td style="padding:5px 0;color:#6b7280;">Email</td><td style="padding:5px 0;">${escape(s.candidateEmail)}</td></tr>
-    <tr><td style="padding:5px 0;color:#6b7280;">Client / Role</td><td style="padding:5px 0;">${escape(s.client)} — ${escape(s.role)}</td></tr>
+    <tr><td style="padding:5px 0;color:#6b7280;">Client / Role</td><td style="padding:5px 0;">${escape(s.client || "—")} — ${escape(s.role || "—")}</td></tr>
     <tr><td style="padding:5px 0;color:#6b7280;">Submitted</td><td style="padding:5px 0;">${escape(s.submittedAt)}</td></tr>
     <tr><td style="padding:5px 0;color:#6b7280;">Time on B + C</td><td style="padding:5px 0;color:${overBudget ? "#b45309" : "#0B1A2E"};font-weight:${overBudget ? 600 : 400};">${elapsedDisplay}${overBudget ? " · over 45m budget" : ""}</td></tr>
     <tr><td style="padding:5px 0;color:#6b7280;">Submission ID</td><td style="padding:5px 0;font-family:monospace;font-size:12px;">${escape(s.id)}</td></tr>
@@ -65,7 +67,7 @@ export async function sendSubmissionEmail(s: Submission): Promise<void> {
     replyTo: s.candidateEmail,
     subject,
     html,
-    text: `New submission from ${s.candidateName} (${s.candidateEmail}) for ${s.role} at ${s.client}. Submitted ${s.submittedAt}. Full PDF attached.`,
+    text: `New submission from ${fullName} (${s.candidateEmail})${s.role ? " for " + s.role : ""}${s.client ? " at " + s.client : ""}. Submitted ${s.submittedAt}. Full PDF attached.`,
     attachments: [
       {
         filename,

@@ -98,15 +98,22 @@ export async function registerRoutes(
     const submittedAt = new Date().toISOString();
     const downloadToken = randomBytes(24).toString("hex"); // 48-char hex
 
+    // If the candidate arrived via an invite, prefer the invite's client/role/proctor
+    // since the candidate-facing form no longer asks for these.
+    const effectiveClient = validatedInvite?.client || data.client || "";
+    const effectiveRole = validatedInvite?.role || data.role || "";
+    const effectiveProctor = validatedInvite?.proctor || data.proctor || "";
+
     const submission = await storage.createSubmission({
       id,
-      client: data.client,
-      role: data.role,
+      client: effectiveClient,
+      role: effectiveRole,
       candidateName: data.candidateName,
+      candidateSurname: data.candidateSurname,
       candidateEmail: data.candidateEmail,
-      candidateMobile: data.candidateMobile,
-      timezone: data.timezone,
-      proctor: data.proctor ?? "",
+      candidateMobile: data.candidateMobile ?? "",
+      timezone: data.timezone ?? "",
+      proctor: effectiveProctor,
       attestation: data.attestation,
       submittedAt,
       sectionB: JSON.stringify(data.sectionB),

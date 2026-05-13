@@ -29,9 +29,10 @@ export function submissionToCsv(s: Submission): string {
   rows.push(["Client", s.client]);
   rows.push(["Role", s.role]);
   rows.push(["Candidate Name", s.candidateName]);
+  rows.push(["Candidate Surname", s.candidateSurname ?? ""]);
   rows.push(["Candidate Email", s.candidateEmail]);
-  rows.push(["Candidate Mobile", s.candidateMobile]);
-  rows.push(["Timezone", s.timezone]);
+  rows.push(["Candidate Mobile", s.candidateMobile ?? ""]);
+  rows.push(["Timezone", s.timezone ?? ""]);
   rows.push(["Proctor", s.proctor ?? ""]);
   rows.push(["Attestation", s.attestation ? "TRUE" : "FALSE"]);
   const elapsed = s.elapsedSeconds ?? 0;
@@ -87,13 +88,11 @@ export function submissionToHtml(s: Submission): string {
 
   <h2 style="font-size:14px;border-bottom:2px solid #3FB6B6;padding-bottom:6px;">Candidate</h2>
   <table style="width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;">
-    <tr><td style="padding:4px 8px;color:#6b7280;width:140px;">Name</td><td style="padding:4px 8px;">${esc(s.candidateName)}</td></tr>
+    <tr><td style="padding:4px 8px;color:#6b7280;width:140px;">Name</td><td style="padding:4px 8px;">${esc(s.candidateName)} ${esc(s.candidateSurname ?? "")}</td></tr>
     <tr><td style="padding:4px 8px;color:#6b7280;">Email</td><td style="padding:4px 8px;">${esc(s.candidateEmail)}</td></tr>
-    <tr><td style="padding:4px 8px;color:#6b7280;">Mobile</td><td style="padding:4px 8px;">${esc(s.candidateMobile)}</td></tr>
-    <tr><td style="padding:4px 8px;color:#6b7280;">Timezone</td><td style="padding:4px 8px;">${esc(s.timezone)}</td></tr>
-    <tr><td style="padding:4px 8px;color:#6b7280;">Client</td><td style="padding:4px 8px;">${esc(s.client)}</td></tr>
-    <tr><td style="padding:4px 8px;color:#6b7280;">Role</td><td style="padding:4px 8px;">${esc(s.role)}</td></tr>
-    <tr><td style="padding:4px 8px;color:#6b7280;">Proctor</td><td style="padding:4px 8px;">${esc(s.proctor ?? "")}</td></tr>
+    <tr><td style="padding:4px 8px;color:#6b7280;">Client</td><td style="padding:4px 8px;">${esc(s.client || "—")}</td></tr>
+    <tr><td style="padding:4px 8px;color:#6b7280;">Role</td><td style="padding:4px 8px;">${esc(s.role || "—")}</td></tr>
+    <tr><td style="padding:4px 8px;color:#6b7280;">Proctor</td><td style="padding:4px 8px;">${esc(s.proctor ?? "—")}</td></tr>
     <tr><td style="padding:4px 8px;color:#6b7280;">Submitted</td><td style="padding:4px 8px;">${esc(s.submittedAt)}</td></tr>
     <tr><td style="padding:4px 8px;color:#6b7280;">Section B started</td><td style="padding:4px 8px;">${esc(s.timerStartedAt ?? "")}</td></tr>
     <tr><td style="padding:4px 8px;color:#6b7280;">Time on B + C</td><td style="padding:4px 8px;">${(() => { const e = s.elapsedSeconds ?? 0; if (!e) return "—"; const m = Math.floor(e/60); const sec = e % 60; const tag = e > 45*60 ? `<span style=\"color:#b45309;font-weight:600;\"> · over 45m budget</span>` : ""; return `${m}m ${String(sec).padStart(2,"0")}s${tag}`; })()}</td></tr>

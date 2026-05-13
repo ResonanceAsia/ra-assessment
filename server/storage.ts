@@ -65,6 +65,9 @@ try {
   if (!has("invite_token")) {
     sqlite.exec(`ALTER TABLE submissions ADD COLUMN invite_token TEXT DEFAULT ''`);
   }
+  if (!has("candidate_surname")) {
+    sqlite.exec(`ALTER TABLE submissions ADD COLUMN candidate_surname TEXT DEFAULT ''`);
+  }
 } catch (_) {
   // best-effort
 }
